@@ -16,9 +16,12 @@ By inputting CSI data into a Convolutional Neural Network ([CNN](https://en.wiki
 Despite challenges such as dataset assumptions and signal noise, the goal is to develop a technology that can be integrated into smartphones and home routers for non-invasive health monitoring.
 
 ## Background
-Nowadays, WiFi is a large part of our everyday lives. In every location, hotspots and [Wifi radio waves](https://en.wikipedia.org/wiki/Wi-Fi#Waveband) are present.
 
 Interest in using CSI for healthcare began in the 2010s with advancements in WiFi standards like IEEE 802.11n. Researchers explored CSI for vital sign monitoring, leading to promising prototypes, and the integration of machine learning, especially deep learning, in the late 2010s improved analysis accuracy. This progress has sparked significant commercial and practical interest, paving the way for CSI-based health monitoring in consumer devices.
 
+Nowadays, WiFi is a large part of our everyday lives. In every location, hotspots and [Wifi radio waves](https://en.wikipedia.org/wiki/Wi-Fi#Waveband) are present.
+Before the beginning of the semester, some spare time has led us to become aware of CSI and the great potential it has. After some homemade research, the field of CSI in clinical setups has been studied but has yet to be widely adopted by clinicians and healthcare personell. 
 
-Before the beginning of the semester, some spare time has led us to become aware of CSI and the great potential it has.
+Traditional methods like [ECG](https://en.wikipedia.org/wiki/Electrocardiography) and [Echocardiography](https://en.wikipedia.org/wiki/Echocardiography) are still preferred by cardiologists and healthcare personell due to their high accuracy and their proven medical efficacy over decades.
+
+By using WiFi we hope to contribute to the medical field by bringing awareness to the technology, by trying to develop and bring a user friendly hardware-software combination to clinical setups and learn a new thing or two.
