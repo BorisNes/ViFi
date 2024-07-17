@@ -9,7 +9,9 @@ Boris Nesterenko, ECE Student.
 Snir Carmeli - Bs.c in Mechanical Engineering.
 
 ## Overview
-This project aims to use WiFi signals, specifically Channel State Information ([CSI](https://en.wikipedia.org/wiki/Channel_state_information)), to monitor heart rate and respiration rate. 
-Leveraging the IEEE 802.11n WiFi standard, which includes MIMO and OFDM technologies, we will capture detailed signal information through CSI. 
-By inputting CSI data into a Convolutional Neural Network (CNN), we aim to detect vital signs by analyzing changes in subcarrier signal strengths. 
+This project was heavily inspired by [This paper](https://arxiv.org/pdf/2203.03980).
+We aim to use WiFi signals, specifically Channel State Information ([CSI](https://en.wikipedia.org/wiki/Channel_state_information)), to monitor heart rate and respiration rate in human subjects. 
+This will be achieved by leveraging the IEEE 802.11n WiFi standard, which includes MIMO and [OFDM](https://en.wikipedia.org/wiki/Orthogonal_frequency-division_multiplexing) technologies, which captures detailed signal information through CSI. 
+By inputting CSI data into a Convolutional Neural Network ([CNN](https://en.wikipedia.org/wiki/Convolutional_neural_network)), we aim to detect vital signs by analyzing changes in subcarrier signal strengths. 
 Despite challenges such as dataset assumptions and signal noise, the goal is to develop a technology that can be integrated into smartphones and home routers for non-invasive health monitoring.
+
