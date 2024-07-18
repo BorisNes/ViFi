@@ -8,6 +8,11 @@ Boris Nesterenko, ECE Student.
 
 Snir Carmeli - Bs.c in Mechanical Engineering.
 
+## Table of contents
+-[Project Overview](https://github.com/BorisNes/ViFi/blob/main/README.md#overview)
+-[Background](https://github.com/BorisNes/ViFi/blob/main/README.md#background)
+-[Data acquisition](https://github.com/BorisNes/ViFi/blob/main/README.md#Data_acquisition)
+
 ## Overview
 This project was heavily inspired by [This paper](https://arxiv.org/pdf/2203.03980).
 We aim to use WiFi signals, specifically Channel State Information ([CSI](https://en.wikipedia.org/wiki/Channel_state_information)), to monitor heart rate and respiration rate in human subjects. 
