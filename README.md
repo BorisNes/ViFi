@@ -9,9 +9,9 @@ Boris Nesterenko, ECE Student.
 Snir Carmeli - Bs.c in Mechanical Engineering.
 
 ## Table of contents
-- [Project Overview](https://github.com/BorisNes/ViFi/blob/main/README.md#overview)
+- [Project Overview](https://github.com/BorisNes/ViFi/tree/main?tab=readme-ov-file#overview)
 
-- [Background](https://github.com/BorisNes/ViFi/blob/main/README.md#background)
+- [Background](https://github.com/BorisNes/ViFi/tree/main?tab=readme-ov-file#overview)
 
 - [Data acquisition](https://github.com/BorisNes/ViFi/blob/main/README.md#data-acquisition)
 
