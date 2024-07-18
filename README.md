@@ -9,11 +9,11 @@ Boris Nesterenko, ECE Student.
 Snir Carmeli - Bs.c in Mechanical Engineering.
 
 ## Table of contents
--[Project Overview](https://github.com/BorisNes/ViFi/blob/main/README.md#overview)
+- [Project Overview](https://github.com/BorisNes/ViFi/blob/main/README.md#overview)
 
--[Background](https://github.com/BorisNes/ViFi/blob/main/README.md#background)
+- [Background](https://github.com/BorisNes/ViFi/blob/main/README.md#background)
 
--[Data acquisition](https://github.com/BorisNes/ViFi/blob/main/README.md#data-acquisition)
+- [Data acquisition](https://github.com/BorisNes/ViFi/blob/main/README.md#data-acquisition)
 
 ## Overview
 This project was heavily inspired by [This paper](https://arxiv.org/pdf/2203.03980).
