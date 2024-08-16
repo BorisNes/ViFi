@@ -16,26 +16,23 @@ Snir Carmeli - Bs.c in Mechanical Engineering.
 - [Data acquisition](https://github.com/BorisNes/ViFi/blob/main/README.md#data-acquisition)
 
 ## Overview
-This project is inspired by advancements in wireless sensing and deep learning. We aim to develop a system for recognizing hand gestures using WiFi signals, leveraging the Widar 3.0 dataset and Recurrent Neural Networks (RNNs). WiFi Channel State Information (CSI) provides a detailed understanding of how signals propagate through space, and by analyzing variations in these signals, our model can distinguish between different hand gestures. The ultimate goal is to create a non-invasive, accurate gesture recognition system that could be integrated into existing WiFi infrastructures. More information on the topic can be found in this [paper](https://arxiv.org/pdf/2207.07859)
+
+This project is inspired by advancements in wireless sensing and deep learning. We aim to develop a system for recognizing hand gestures using WiFi signals, leveraging the Widar 3.0 dataset and Recurrent Neural Networks (RNNs). WiFi Channel State Information (CSI) provides a detailed understanding of how signals propagate through space, and by analyzing variations in these signals, our model can distinguish between different hand gestures. The ultimate goal is to create a non-invasive, accurate gesture recognition system that could be integrated into existing WiFi infrastructures. More information on the topic can be found in [this](https://arxiv.org/pdf/2207.07859) paper.
 
 ## Background
 
-Interest in using CSI for healthcare began in the 2010s with advancements in WiFi standards like IEEE 802.11n. Researchers explored CSI for vital sign monitoring, leading to promising prototypes, and the integration of machine learning, especially deep learning, in the late 2010s improved analysis accuracy. This progress has sparked significant commercial and practical interest, paving the way for CSI-based health monitoring in consumer devices.
+The use of WiFi signals for gesture recognition is a relatively new field that has gained traction in recent years. With the growing interest in human-computer interaction and smart environments, the ability to recognize gestures using existing WiFi infrastructure is particularly appealing. This approach bypasses the need for additional hardware like cameras or wearable devices, making it both cost-effective and privacy-preserving.
 
-Nowadays, WiFi is a large part of our everyday lives. In every location, hotspots and [Wifi radio waves](https://en.wikipedia.org/wiki/Wi-Fi#Waveband) are present.
-Before the beginning of the semester, some spare time has led us to become aware of CSI and the great potential it has. After some homemade research, the field of CSI in clinical setups has been studied but has yet to be widely adopted by clinicians and healthcare personell. 
-
-Traditional methods like [ECG](https://en.wikipedia.org/wiki/Electrocardiography) and [Echocardiography](https://en.wikipedia.org/wiki/Echocardiography) are still preferred by cardiologists and healthcare personell due to their high accuracy and their proven medical efficacy over decades.
-
-By using WiFi we hope to contribute to the medical field by bringing awareness to the technology, by trying to develop and bring a user friendly hardware-software combination to clinical setups and learn a new thing or two.
+The Widar 3.0 dataset is a significant resource in this field, providing extensive data on human gestures captured through WiFi CSI. By utilizing this dataset and applying deep learning techniques, specifically RNNs, we aim to achieve robust gesture recognition. This project builds on previous research but shifts the focus towards practical implementation using RNNs, which are well-suited for sequential data like WiFi signals.
 
 ## Data acquisition
 
-Due to time constraints, we shall use a [dataset](https://github.com/Gi-z/CSI-Data/tree/main/Internal/intel/Heart%20Rate) published by [Gi-z](https://github.com/Gi-z) and contains CSI data from various human activities, accuired using specific WiFi adapters that allow for CSI extraction (Most routers and smartphones do not allow access to CSI data due to security reasons).
+For this project, we are utilizing the Widar 3.0 dataset, which includes a wide variety of hand gestures captured using WiFi signals. The dataset was collected in controlled environments, ensuring high-quality data for training and evaluation.
 
-For those who are intersted, CSI data can be extracted from an ESP32 SoC by flashing it with special firmware. More detailed information about the process can be found [here](https://stevenmhernandez.github.io/ESP32-CSI-Tool/). 
+The Widar 3.0 dataset contains CSI data recorded with specific WiFi devices that can extract detailed signal information. This data is ideal for training our RNN model to recognize different gestures based on the subtle variations in signal patterns caused by hand movements.
 
-Here's a heatmap of a test we conducted 6 months ago ![image](https://github.com/user-attachments/assets/a83df65f-366f-44df-81ab-bc23c47e7df4)
+In a test conducted earlier, we used an ESP32 module to visualize how WiFi signals change with different hand positions and movements. The heatmap below illustrates signal variations detected by the ESP32 as it responds to changes in the environment. This experiment highlights the potential of WiFi-based gesture recognition, which we aim to refine and expand upon using the Widar 3.0 dataset and advanced neural networks.
+![image](https://github.com/user-attachments/assets/a83df65f-366f-44df-81ab-bc23c47e7df4)
 
-It was obtained by connecting a smartphone to the ESP32 acting as an Access Point, and continuously sending [ping](https://en.wikipedia.org/wiki/Ping_(networking_utility)) requests to ensure continuous transmittion and acquisition from the ESP32. The scenario behind the graph is holding the smartphone in the same room as the ESP32 (which can be seen by the blue smear along the subcarriers in frames 20-40, meaning the WiFi indeed sensed some obstacles between the smartphone and the ESP32, resulting in decreased signal strength), and later returning to the room and bringing the phone in contact with the ESP32, as depicted with a yellow smear across all the subcarriers, meaning the signal is strong.
+The heatmap shows how WiFi signals vary when interacting with different objects in the environment, a principle that underpins our gesture recognition model. By training our RNN on the Widar 3.0 dataset, we hope to achieve accurate and reliable gesture recognition.
 
