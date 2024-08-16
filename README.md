@@ -16,11 +16,7 @@ Snir Carmeli - Bs.c in Mechanical Engineering.
 - [Data acquisition](https://github.com/BorisNes/ViFi/blob/main/README.md#data-acquisition)
 
 ## Overview
-This project was heavily inspired by [This paper](https://arxiv.org/pdf/2207.07859).
-We aim to use WiFi signals, specifically Channel State Information ([CSI](https://en.wikipedia.org/wiki/Channel_state_information)), to monitor heart rate and respiration rate in human subjects. 
-This will be achieved by leveraging the IEEE 802.11n WiFi standard, which includes MIMO and [OFDM](https://en.wikipedia.org/wiki/Orthogonal_frequency-division_multiplexing) technologies, which captures detailed signal information through CSI. 
-By inputting CSI data into a Convolutional Neural Network ([CNN](https://en.wikipedia.org/wiki/Convolutional_neural_network)), we aim to detect vital signs by analyzing changes in subcarrier signal strengths. 
-Despite challenges such as dataset assumptions and signal noise, the goal is to develop a technology that can be integrated into smartphones and home routers for non-invasive health monitoring.
+This project is inspired by advancements in wireless sensing and deep learning. We aim to develop a system for recognizing hand gestures using WiFi signals, leveraging the Widar 3.0 dataset and Recurrent Neural Networks (RNNs). WiFi Channel State Information (CSI) provides a detailed understanding of how signals propagate through space, and by analyzing variations in these signals, our model can distinguish between different hand gestures. The ultimate goal is to create a non-invasive, accurate gesture recognition system that could be integrated into existing WiFi infrastructures. More information on the topic can be found in this [paper](https://arxiv.org/pdf/2207.07859)
 
 ## Background
 
