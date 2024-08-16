@@ -36,3 +36,11 @@ In a test conducted earlier, we used an ESP32 module to visualize how WiFi signa
 
 The heatmap shows how WiFi signals vary when interacting with different objects in the environment, a principle that underpins our gesture recognition model. By training our RNN on the Widar 3.0 dataset, we hope to achieve accurate and reliable gesture recognition.
 
+## Architecture
+
+We have chosen to use an RNN to process the data and classify the input into one of 22 possible classes, each class being a hand gesture.
+
+Our choice for the network was due the fact that RNN's are great for processing sequential data.
+
+An outline of the network can be seen in the image below: ![png](https://github.com/user-attachments/assets/ee9f1bec-fc3a-4509-9942-ca8c64532710)
+
