@@ -47,7 +47,8 @@ An outline of the network can be seen in the image below: ![png](https://github.
 
 During training, we used tensorboard to keep track of the average loss each epoch :
 ![image](https://github.com/user-attachments/assets/f476e61a-f9f1-4eba-a9d7-d8864298ce17)
-One line was trained on 600 samples per folder, and the other one was trained on all data.
+One line was trained on 600 samples per folder, and the other one was trained on all data. Resulting Accuracy: 64.388%
 And to try and make it overfit, we ran it for 200 epochs:
 ![image](https://github.com/user-attachments/assets/797622b8-166b-4cfb-bcfd-de6a0dfe375b)
+Resulting Accuracy: 63.603%
 
