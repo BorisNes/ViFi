@@ -51,4 +51,7 @@ One line was trained on 600 samples per folder, and the other one was trained on
 And to try and make it overfit, we ran it for 200 epochs:
 ![image](https://github.com/user-attachments/assets/797622b8-166b-4cfb-bcfd-de6a0dfe375b)
 Resulting Accuracy: 63.603%
+We also tried a different architecture, by changing the number of neurons in the hidden layer to 128 and have 3 hidden layers.
+This time, overfitting occured when training for 50 epochs:
+![image](https://github.com/user-attachments/assets/4f5cf6cf-3337-4be1-9b45-dcc531b16790)
 
