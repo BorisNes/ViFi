@@ -18,7 +18,12 @@ Snir Carmeli - Bs.c in Mechanical Engineering.
 
 ## Overview
 
-This project is inspired by advancements in wireless sensing and deep learning. We aim to develop a system for recognizing hand gestures using WiFi signals, leveraging the Widar 3.0 dataset and Recurrent Neural Networks (RNNs). WiFi Channel State Information (CSI) provides a detailed understanding of how signals propagate through space, and by analyzing variations in these signals, our model can distinguish between different hand gestures. The ultimate goal is to create a non-invasive, accurate gesture recognition system that could be integrated into existing WiFi infrastructures. More information on the topic can be found in [this](https://arxiv.org/pdf/2207.07859) paper.
+This project is inspired by advancements in wireless sensing and deep learning. We aim to develop a system for recognizing hand gestures using WiFi signals, leveraging the Widar 3.0 dataset and Recurrent Neural Networks (RNNs). WiFi Channel State Information (CSI) provides a detailed understanding of how signals propagate through space, and by analyzing variations in these signals, our model can distinguish between different hand gestures.
+In a test conducted a few months ago due to personal interest, we used an ESP32 module to visualize how WiFi signals change with different hand positions and movements. The heatmap below illustrates signal variations detected by the ESP32 as it responds to changes in the environment. This experiment highlights the potential of WiFi-based gesture recognition, which we aim to refine and expand upon using the Widar 3.0 dataset and advanced neural networks.
+![image](https://github.com/user-attachments/assets/a83df65f-366f-44df-81ab-bc23c47e7df4)
+
+The ultimate goal is to create a non-invasive, accurate gesture recognition system that could be integrated into existing WiFi infrastructures. More information on the topic can be found in [this](https://arxiv.org/pdf/2207.07859) paper.
+
 
 ## Background
 
@@ -30,12 +35,9 @@ The Widar 3.0 dataset is a significant resource in this field, providing extensi
 
 For this project, we are utilizing the Widar 3.0 dataset, which includes a wide variety of hand gestures captured using WiFi signals. The dataset was collected in controlled environments, ensuring high-quality data for training and evaluation. It was preprocessed into .csv format by [xyanchen](https://github.com/xyanchen/WiFi-CSI-Sensing-Benchmark)
 
-The Widar 3.0 dataset contains CSI data recorded with specific WiFi devices that can extract detailed signal information. This data is ideal for training our RNN model to recognize different gestures based on the subtle variations in signal patterns caused by hand movements.
+The Widar 3.0 dataset contains CSI data recorded with specific WiFi Network Interface Controllers (NICs) that can extract detailed signal information. This data is ideal for training our RNN model to recognize different gestures based on the subtle variations in signal patterns caused by hand movements.
 
-In a test conducted earlier, we used an ESP32 module to visualize how WiFi signals change with different hand positions and movements. The heatmap below illustrates signal variations detected by the ESP32 as it responds to changes in the environment. This experiment highlights the potential of WiFi-based gesture recognition, which we aim to refine and expand upon using the Widar 3.0 dataset and advanced neural networks.
-![image](https://github.com/user-attachments/assets/a83df65f-366f-44df-81ab-bc23c47e7df4)
 
-The heatmap shows how WiFi signals vary when interacting with different objects in the environment, a principle that underpins our gesture recognition model. By training our RNN on the Widar 3.0 dataset, we hope to achieve accurate and reliable gesture recognition.
 
 ## Architecture
 
@@ -44,6 +46,8 @@ We have chosen to use an RNN to process the data and classify the input into one
 Our choice for the network was due the fact that RNN's are great for processing sequential data.
 
 An outline of the network can be seen in the image below: ![png](https://github.com/user-attachments/assets/ee9f1bec-fc3a-4509-9942-ca8c64532710)
+
+
 
 During training, we used tensorboard to keep track of the average loss each epoch :
 ![image](https://github.com/user-attachments/assets/f476e61a-f9f1-4eba-a9d7-d8864298ce17)
