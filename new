@@ -1,0 +1,395 @@
+#Original Widar BVP Dataset .mat files
+import os
+import numpy as np
+from scipy.io import loadmat
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from concurrent.futures import ThreadPoolExecutor
+import torch
+from torch.utils.data import Dataset, DataLoader
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.tensorboard import SummaryWriter
+import torch.nn.functional as F
+import torch.nn.utils.rnn as rnn_utils
+# Gesture mappings based on the provided table (as in your original code)
+gesture_mappings = {
+    '20181109': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Slide',
+        5: 'Draw-Zigzag(Vertical)', 6: 'Draw-N(Vertical)'
+    },
+    '20181112': {
+        1: 'Draw-1', 2: 'Draw-2', 3: 'Draw-3', 4: 'Draw-4',
+        5: 'Draw-5', 6: 'Draw-6', 7: 'Draw-7', 8: 'Draw-8',
+        9: 'Draw-9', 10: 'Draw-0'
+    },
+    '20181115': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Draw-O(Vertical)',
+        5: 'Draw-Zigzag(Vertical)', 6: 'Draw-N(Vertical)'
+    },
+    '20181116': {
+        1: 'Draw-1', 2: 'Draw-2', 3: 'Draw-3', 4: 'Draw-4',
+        5: 'Draw-5', 6: 'Draw-6', 7: 'Draw-7', 8: 'Draw-8',
+        9: 'Draw-9', 10: 'Draw-0'
+    },
+    '20181117': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Draw-O(Vertical)',
+        5: 'Draw-Zigzag(Vertical)', 6: 'Draw-N(Vertical)'
+    },
+    '20181118': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Draw-O(Vertical)',
+        5: 'Draw-Zigzag(Vertical)', 6: 'Draw-N(Vertical)'
+    },
+    # Existing mappings for other dates
+    '20181121': {
+        1: 'Slide', 2: 'Draw-O(Horizontal)', 3: 'Draw-Zigzag(Horizontal)',
+        4: 'Draw-N(Horizontal)', 5: 'Draw-Triangle(Horizontal)', 6: 'Draw-Rectangle(Horizontal)'
+    },
+    '20181127': {
+        1: 'Slide', 2: 'Draw-O(Horizontal)', 3: 'Draw-Zigzag(Horizontal)',
+        4: 'Draw-N(Horizontal)', 5: 'Draw-Triangle(Horizontal)', 6: 'Draw-Rectangle(Horizontal)'
+    },
+    '20181128': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap',
+        4: 'Draw-O(Horizontal)', 5: 'Draw-Zigzag(Horizontal)', 6: 'Draw-N(Horizontal)'
+    },
+    '20181130': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Slide',
+        5: 'Draw-O(Horizontal)', 6: 'Draw-Zigzag(Horizontal)', 7: 'Draw-N(Horizontal)',
+        8: 'Draw-Triangle(Horizontal)', 9: 'Draw-Rectangle(Horizontal)'
+    },
+    '20181204': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Slide',
+        5: 'Draw-O(Horizontal)', 6: 'Draw-Zigzag(Horizontal)', 7: 'Draw-N(Horizontal)',
+        8: 'Draw-Triangle(Horizontal)', 9: 'Draw-Rectangle(Horizontal)'
+    },
+    '20181205': {
+        1: 'Draw-O(Horizontal)', 2: 'Draw-Zigzag(Horizontal)', 3: 'Draw-N(Horizontal)',
+        4: 'Draw-Triangle(Horizontal)', 5: 'Draw-Rectangle(Horizontal)',
+        6: 'Slide'
+    },
+    '20181208': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Slide'
+    },
+    '20181209': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Slide',
+        5: 'Draw-O(Horizontal)', 6: 'Draw-Zigzag(Horizontal)'
+    },
+    '20181211': {
+        1: 'Push&Pull', 2: 'Sweep', 3: 'Clap', 4: 'Slide',
+        5: 'Draw-O(Horizontal)', 6: 'Draw-Zigzag(Horizontal)'
+    }
+}
+
+
+# Function to map files to labels based on their prefix and folder name
+def get_label_from_filename(filename, folder_name):
+    # Extract the base folder name, e.g., '20181109'
+    base_folder_name = folder_name.split('-')[0]
+
+    # Retrieve the gesture list for this folder
+    gesture_list = gesture_mappings.get(base_folder_name, None)
+    if gesture_list is None:
+        raise ValueError(f"Unrecognized folder name {base_folder_name} in file {filename}")
+
+    # Extract the gesture type as the first number after the first '-'
+    try:
+        gesture_type = int(filename.split('-')[1])
+    except (IndexError, ValueError) as e:
+        raise ValueError(f"Filename {filename} does not have the expected format: {e}")
+
+    # Map the gesture type to a human-readable gesture name
+    gesture_name = gesture_list.get(gesture_type, "Unknown Gesture")
+
+    if gesture_name == "Unknown Gesture":
+        raise ValueError(f"Unrecognized gesture type {gesture_type} in file {filename}")
+
+    return gesture_name
+
+
+# Function to load and preprocess data from a .mat file
+def load_mat_file(file_path):
+    try:
+        mat_data = loadmat(file_path)
+        data = mat_data['velocity_spectrum_ro']
+        reshaped_data = data.reshape(20 * 20, -1)  # Flatten the x and y dimensions
+
+        # Ensure the reshaped data has the correct shape
+        if reshaped_data.shape[0] != 400:
+            print(f"Skipping file {file_path} due to incorrect reshaped size.")
+            return None
+        #print(f"Reshaped data shape: {reshaped_data.shape} for file {file_path}")
+
+        return reshaped_data
+    except Exception as e:
+        print(f"Error processing file {file_path}: {e}")
+        return None
+
+
+# Function to process a single user's folder
+def process_user_folder(user_path, folder_name):
+    sequences = []
+    labels = []
+
+    for file_name in os.listdir(user_path):
+        if file_name.endswith('.mat'):
+            file_path = os.path.join(user_path, file_name)
+            data = load_mat_file(file_path)
+            if data is None:
+                print(f"Skipping file {file_name} because it couldn't be loaded.")
+                continue
+
+            label = get_label_from_filename(file_name, folder_name)
+            sequences.append(data)
+            labels.append(label)
+
+    return sequences, labels
+
+
+# Function to process the entire dataset
+def process_dataset(root_path, num_workers):
+    all_sequences = []
+    all_labels = []
+
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
+        futures = []
+        for folder_name in os.listdir(root_path):
+            folder_path = os.path.join(root_path, folder_name)
+            if os.path.isdir(folder_path):
+                # Process all .mat files directly in the folder
+                futures.append(
+                    executor.submit(process_user_folder, folder_path, folder_name)
+                )
+
+        for future in futures:
+            sequences, labels = future.result()
+            all_sequences.extend(sequences)
+            all_labels.extend(labels)
+
+    return all_sequences, all_labels
+
+
+
+def pad_sequence(sequence, max_length):
+    """Pads the sequence with zeros up to max_length."""
+    length = sequence.size(1)
+    if length < max_length:
+        padding = torch.zeros((sequence.size(0), max_length - length), dtype=sequence.dtype, device=sequence.device)
+        return torch.cat([sequence, padding], dim=1)
+    return sequence
+
+
+# Dataset class
+class CSIDataset(Dataset):
+    def __init__(self, sequences, labels):
+        self.sequences = sequences
+        self.labels = labels
+        self.lengths = [len(seq[0]) for seq in sequences]  # Actual sequence lengths
+
+    def __len__(self):
+        return len(self.sequences)
+
+    def __getitem__(self, idx):
+        sequence = torch.tensor(self.sequences[idx], dtype=torch.float32)
+        label = torch.tensor(self.labels[idx], dtype=torch.long)
+        length = self.lengths[idx]  # Get the original length of the sequence
+
+        return sequence, label, length
+
+
+# Model class
+class ImprovedRWKVModel(nn.Module):
+    def __init__(self, input_size, hidden_size, num_layers, output_size, dropout=0.5):
+        super(ImprovedRWKVModel, self).__init__()
+        self.rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True, dropout=dropout)
+        self.fc = nn.Linear(hidden_size, output_size)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, lengths):
+        # Pack the padded batch of sequences
+        packed_input = rnn_utils.pack_padded_sequence(x, lengths, batch_first=True, enforce_sorted=False)
+        packed_output, _ = self.rnn(packed_input)
+
+        # Unpack output
+        output, _ = rnn_utils.pad_packed_sequence(packed_output, batch_first=True)
+
+        # Apply dropout and FC layer to the last output
+        out = self.dropout(output[:, -1, :])
+        out = self.fc(out)
+        return out
+
+
+def collate_fn(batch):
+    # Sort the batch by sequence length in descending order
+    batch.sort(key=lambda x: x[0].shape[1], reverse=True)
+
+    sequences, labels, lengths = zip(*batch)
+
+    # Ensure all sequences are tensors and pad manually
+    sequences = [torch.tensor(seq, dtype=torch.float32) for seq in sequences]
+
+    # Find the maximum sequence length in this batch
+    max_len = max([seq.shape[1] for seq in sequences])
+
+    # Pad all sequences to the maximum length in this batch
+    padded_sequences = torch.stack([F.pad(seq, (0, max_len - seq.shape[1]), "constant", 0) for seq in sequences])
+
+    # Convert labels and lengths to tensors
+    labels = torch.tensor(labels, dtype=torch.long)
+    lengths = torch.tensor([seq.shape[1] for seq in sequences], dtype=torch.long)
+
+    return padded_sequences, labels, lengths
+
+
+# Training code wrapped in a main guard
+if __name__ == "__main__":
+    root_path = r'C:\Users\Grillex\Desktop\BVP\BVP'  # Update this path to your data location
+
+    # Initialize TensorBoard writer
+    log_dir = r'C:\Users\Grillex\PycharmProjects\Widar-DL-Project\logs'
+    writer = SummaryWriter(log_dir=log_dir)
+
+    # Parameters
+    SEQ_LENGTH = 15  # Adjusted to match the time steps found in the sample file
+    NUM_WORKERS = 8  # Number of threads for parallel processing
+
+    # Process the dataset
+    all_sequences, all_labels = process_dataset(root_path, NUM_WORKERS)
+
+    if len(all_sequences) == 0 or len(all_labels) == 0:
+        print("No valid data found. Please check the dataset and processing functions.")
+    else:
+        print("Data loaded and processed. Number of sequences:", len(all_sequences))
+        print("Number of labels:", len(all_labels))
+        print(f"Unique labels before encoding: {set(all_labels)}")
+        # Encode Labels
+        label_encoder = LabelEncoder()
+        encoded_labels = label_encoder.fit_transform(all_labels)
+        print("Labels encoded. Example mapping:",
+              dict(zip(label_encoder.classes_, label_encoder.transform(label_encoder.classes_))))
+
+        # Find the maximum sequence length in the dataset
+        max_seq_length = max(seq.shape[1] for seq in all_sequences)
+
+        # Split the data into training and testing sets
+        X_train, X_test, y_train, y_test = train_test_split(all_sequences, encoded_labels, test_size=0.2,
+                                                            random_state=42)
+
+        # Create dataset and dataloader for training
+        train_dataset = CSIDataset(X_train, y_train)
+        train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=True, collate_fn=collate_fn)
+
+
+        # Create dataset and dataloader for testing
+        test_dataset = CSIDataset(X_test, y_test)
+        test_dataloader = DataLoader(test_dataset, batch_size=32, shuffle=False, collate_fn=collate_fn)
+
+        # Initialize the device
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(f'Using device: {device}')
+
+        # Parameters
+        input_size = 400  # Adjusted to match the flattened input size (20x20)
+        hidden_size = 64
+        num_layers = 2
+        output_size = len(np.unique(encoded_labels))
+
+        # Initialize the model and move it to the GPU
+        model = ImprovedRWKVModel(input_size, hidden_size, num_layers, output_size, dropout=0.6).to(device)
+        criterion = nn.CrossEntropyLoss().to(device)
+        optimizer = optim.Adam(model.parameters(), lr=0.005)
+
+        # Training loop
+        num_epochs = 20
+
+        for epoch in range(num_epochs):
+            model.train()
+            running_loss = 0.0
+            for i, (inputs, targets, lengths) in enumerate(train_dataloader):
+                # Filter out any sequences with zero length
+                non_zero_indices = lengths > 0
+                inputs = inputs[non_zero_indices]
+                targets = targets[non_zero_indices]
+                lengths = lengths[non_zero_indices]
+
+                # Move inputs and targets to GPU, if available
+                inputs, targets = inputs.to(device), targets.to(device)
+
+                # Move lengths to CPU and convert to int64
+                lengths = lengths.cpu().int()
+
+                if len(inputs) == 0:
+                    print(f"Skipping batch {i} as all sequences have length 0.")
+                    continue
+
+                inputs = inputs.transpose(1, 2)  # Transpose to match [batch_size, T, 400]
+                outputs = model(inputs, lengths)
+
+                loss = criterion(outputs, targets)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+                # Accumulate loss
+                running_loss += loss.item()
+
+            # Calculate average loss for the epoch
+            avg_loss = running_loss / len(train_dataloader)
+
+            # Log loss to TensorBoard
+            writer.add_scalar('Training Loss', avg_loss, epoch)
+
+            print(f'Epoch {epoch + 1}/{num_epochs}, Loss: {avg_loss}')
+
+        # Save the model
+        directory = r'C:\Users\Grillex\PycharmProjects\Widar-DL-Project'
+        file_name = 'rnn_widar_model.pth'
+        file_path = os.path.join(directory, file_name)
+
+        # Ensure the directory exists
+        os.makedirs(directory, exist_ok=True)
+
+        # Save the model's state dictionary
+        torch.save(model.state_dict(), file_path)
+        writer.close()
+
+        print(f'Model saved to {file_path}')
+
+        # Evaluate the model on the test set
+
+        model.eval()
+        test_loss = 0.0
+        correct = 0
+        total = 0
+        with torch.no_grad():
+            for inputs, targets, lengths in test_dataloader:
+                # Filter out any sequences with zero length
+                non_zero_indices = lengths > 0
+                inputs = inputs[non_zero_indices]
+                targets = targets[non_zero_indices]
+                lengths = lengths[non_zero_indices]
+
+                if len(inputs) == 0:
+                    print(f"Skipping batch as all sequences have length 0.")
+                    continue
+
+                inputs, targets = inputs.to(device), targets.to(device)
+
+                # Move lengths to CPU and convert to int64
+                lengths = lengths.cpu().int()
+
+                inputs = inputs.transpose(1, 2)  # Transpose to match [batch_size, T, 400]
+                outputs = model(inputs, lengths)
+
+                loss = criterion(outputs, targets)
+                test_loss += loss.item()
+                _, predicted = torch.max(outputs, 1)
+                total += targets.size(0)
+                correct += (predicted == targets).sum().item()
+
+        test_loss /= len(test_dataloader)
+        accuracy = 100 * correct / total
+
+        print(f'Test Loss: {test_loss:.4f}, Test Accuracy: {accuracy:.2f}%')
+
+
