@@ -45,3 +45,5 @@ Our choice for the network was due the fact that RNN's are great for processing 
 
 An outline of the network can be seen in the image below: ![png](https://github.com/user-attachments/assets/ee9f1bec-fc3a-4509-9942-ca8c64532710)
 
+During training, we used tensorboard to keep track of the average loss each epoch :
+![image](https://github.com/user-attachments/assets/9d227f88-6ef2-4d16-8a8f-340f8325b24c)
