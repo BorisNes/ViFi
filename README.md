@@ -28,7 +28,7 @@ The Widar 3.0 dataset is a significant resource in this field, providing extensi
 
 ## Data acquisition
 
-For this project, we are utilizing the Widar 3.0 dataset, which includes a wide variety of hand gestures captured using WiFi signals. The dataset was collected in controlled environments, ensuring high-quality data for training and evaluation.
+For this project, we are utilizing the Widar 3.0 dataset, which includes a wide variety of hand gestures captured using WiFi signals. The dataset was collected in controlled environments, ensuring high-quality data for training and evaluation. It was preprocessed into .csv format by [xyanchen](https://github.com/xyanchen/WiFi-CSI-Sensing-Benchmark)
 
 The Widar 3.0 dataset contains CSI data recorded with specific WiFi devices that can extract detailed signal information. This data is ideal for training our RNN model to recognize different gestures based on the subtle variations in signal patterns caused by hand movements.
 
