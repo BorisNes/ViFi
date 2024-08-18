@@ -7,7 +7,7 @@ This project is under the course of "Deep Learning 046211" By the, [Technion ECE
 ## Submitted by 
 Boris Nesterenko, ECE Student.
 
-Snir Carmeli - Bs.c in Mechanical Engineering.
+Snir Carmeli - Bs.c in Mechanical Engineering, MSc. in ECE
 
 ## Table of contents
 - [Project Overview](https://github.com/BorisNes/ViFi/tree/main?tab=readme-ov-file#overview)
