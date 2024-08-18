@@ -45,7 +45,8 @@ We have chosen to use an RNN to process the data and classify the input into one
 
 Our choice for the network was due the fact that RNN's are great for processing sequential data.
 
-An outline of the network can be seen in the image below: ![png](https://github.com/user-attachments/assets/ee9f1bec-fc3a-4509-9942-ca8c64532710)
+An outline of the network can be seen in the image below: ![pn2g](https://github.com/user-attachments/assets/23b26074-8d16-4896-8d52-feb1a0e27065)
+
 
 
 
