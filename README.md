@@ -48,7 +48,7 @@ Our choice for the network was due the fact that RNN's are great for processing 
 An outline of the network can be seen in the image below: ![pn2g](https://github.com/user-attachments/assets/23b26074-8d16-4896-8d52-feb1a0e27065)
 
 
-
+## Results
 
 During training, we used tensorboard to keep track of the average loss each epoch :
 ![image](https://github.com/user-attachments/assets/f476e61a-f9f1-4eba-a9d7-d8864298ce17)
@@ -60,3 +60,13 @@ We also tried a different architecture, by changing the number of neurons in the
 This time, overfitting occured when training for 50 epochs:
 ![image](https://github.com/user-attachments/assets/4f5cf6cf-3337-4be1-9b45-dcc531b16790)
 
+## Running the code
+
+Our code was run inside of a virtual environment created by PyCharm. The model was trained on my trusty yet pricey Nvidia 4070 Ti. Currently CUDA compatible, training can run off of a CPU but it's not advisable due to long runtimes. An AMD or Intel backend might be implemented in the future, just for the sake of battling Nvidia's monopoly.
+- Install all requirements for this code, which are specified in the requirements.txt file
+- Download the Widar Data from [xyanchen](https://github.com/xyanchen/WiFi-CSI-Sensing-Benchmark) (or just click [this](https://drive.google.com/drive/folders/1R0R8SlVbLI1iUFQCzh_mH90H_4CW2iwt?usp=sharing) link). Make sure you only use the WidarData folder.
+- In the "load_and_train_FINAL.py" code, change line #94 to the path of the root of the folder containing the WidarData dataset.
+- The code loads the dataset (MAY TAKE VERY LONG, ABOUT 12 MINS) and caches the processed numpy strings into a .npy file in a specified directory (line 96), to save time if you just want to retrain the model using different hyperparameters without waiting for all data to be loaded. Tensorboard(python package) can be used to view the training process
+- (optional) Change the hyperparameters of the neural network in the code. Default is 2 hidden layers, each with a size of 64, and run for 25 epochs.
+- After training is done, the weights are saved to a .pth file, in the directory specified in line #184. Copy the path of the .pth file (life hack- shift+right click adds a "copy as path" option in the dropdown menu, thank me later) and change line number #25 in the "inference_FINAL.py" file to specify the directory of the weights file. Of course also change line number #33 of "inference_FINAL.py" to specify the location of the dataset, for loading of the test folder.
+- Run "inference_FINAL.py", the resulting model accuracy should pop up after the execution.
